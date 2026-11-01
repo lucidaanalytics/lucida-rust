@@ -1,0 +1,660 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "G18 (LC-FLG-18): multi-kind contexts (user, device, org): context filters, context aggregation and fallbacks.",
+ "hash_vectors": [
+  {
+   "input": "by_org.s.org4",
+   "numerator": 1602073546790656,
+   "hash": 0.35573178775797487
+  },
+  {
+   "input": "by_org.s.org0",
+   "numerator": 3491759718518262,
+   "hash": 0.775326407191526
+  }
+ ],
+ "flags": [
+  {
+   "key": "org_plan",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "filters": [
+      {
+       "type": "context",
+       "context_kind": "org",
+       "key": "plan",
+       "op": "eq",
+       "value": "enterprise"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "user_plan",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "filters": [
+      {
+       "type": "context",
+       "context_kind": "user",
+       "key": "plan",
+       "op": "eq",
+       "value": "pro"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "device_os",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "filters": [
+      {
+       "type": "context",
+       "context_kind": "device",
+       "key": "os",
+       "op": "in",
+       "value": [
+        "ios",
+        "android"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "user_and_org",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "filters": [
+      {
+       "type": "context",
+       "context_kind": "user",
+       "key": "plan",
+       "op": "eq",
+       "value": "pro"
+      },
+      {
+       "type": "context",
+       "context_kind": "org",
+       "key": "tier",
+       "op": "eq",
+       "value": "gold"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "org_unset",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "filters": [
+      {
+       "type": "context",
+       "context_kind": "org",
+       "key": "plan",
+       "op": "is_not_set"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "bad_kind",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "filters": [
+      {
+       "type": "context",
+       "context_kind": "team",
+       "key": "plan",
+       "op": "is_not_set"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "by_org",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "context",
+    "context_kind": "org"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 50,
+     "filters": []
+    }
+   ]
+  },
+  {
+   "key": "by_device",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "context",
+    "context_kind": "device"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "filters": []
+    }
+   ]
+  },
+  {
+   "key": "by_user",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "context",
+    "context_kind": "user"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 50,
+     "filters": []
+    }
+   ]
+  }
+ ],
+ "vectors": [
+  {
+   "name": "org property matches",
+   "flag": "org_plan",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "org": {
+      "key": "o1",
+      "properties": {
+       "plan": "enterprise"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "org property differs",
+   "flag": "org_plan",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "org": {
+      "key": "o1",
+      "properties": {
+       "plan": "free"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "no org context never matches eq",
+   "flag": "org_plan",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "user context falls back to person_properties",
+   "flag": "user_plan",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "explicit user context beats person_properties",
+   "flag": "user_plan",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    },
+    "contexts": {
+     "user": {
+      "key": "u1",
+      "properties": {
+       "plan": "free"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "explicit user context matches",
+   "flag": "user_plan",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "user": {
+      "key": "u1",
+      "properties": {
+       "plan": "pro"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "device context in-list",
+   "flag": "device_os",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "device": {
+      "key": "d1",
+      "properties": {
+       "os": "ios"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "device falls back to device_properties",
+   "flag": "device_os",
+   "context": {
+    "distinct_id": "u1",
+    "device_properties": {
+     "os": "android"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "device os outside the list",
+   "flag": "device_os",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "device": {
+      "key": "d1",
+      "properties": {
+       "os": "web"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "user and org both match",
+   "flag": "user_and_org",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    },
+    "contexts": {
+     "org": {
+      "key": "o1",
+      "properties": {
+       "tier": "gold"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "org fails the AND",
+   "flag": "user_and_org",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    },
+    "contexts": {
+     "org": {
+      "key": "o1",
+      "properties": {
+       "tier": "silver"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "user fails the AND",
+   "flag": "user_and_org",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "free"
+    },
+    "contexts": {
+     "org": {
+      "key": "o1",
+      "properties": {
+       "tier": "gold"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "absent org context is_not_set",
+   "flag": "org_unset",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "org context without the property is_not_set",
+   "flag": "org_unset",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "org": {
+      "key": "o1"
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "org property set fails is_not_set",
+   "flag": "org_unset",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "org": {
+      "key": "o1",
+      "properties": {
+       "plan": "x"
+      }
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "unknown context kind never matches",
+   "flag": "bad_kind",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "team": {
+      "key": "t1"
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "org aggregation buckets on the org key (below)",
+   "flag": "by_org",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "org": {
+      "key": "org4"
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "org aggregation buckets on the org key (above)",
+   "flag": "by_org",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "org": {
+      "key": "org0"
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "org aggregation ignores distinct_id",
+   "flag": "by_org",
+   "context": {
+    "distinct_id": "u0",
+    "contexts": {
+     "org": {
+      "key": "org4"
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "org aggregation without an org context",
+   "flag": "by_org",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_bucketing_key",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "device aggregation via device context",
+   "flag": "by_device",
+   "context": {
+    "distinct_id": "u1",
+    "contexts": {
+     "device": {
+      "key": "d9"
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "device aggregation falls back to device_id",
+   "flag": "by_device",
+   "context": {
+    "distinct_id": "u1",
+    "device_id": "d9"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "device aggregation without a device key",
+   "flag": "by_device",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_bucketing_key",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "user aggregation falls back to distinct_id (below)",
+   "flag": "by_user",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "user aggregation falls back to distinct_id (above)",
+   "flag": "by_user",
+   "context": {
+    "distinct_id": "u0"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "explicit user context key wins over distinct_id",
+   "flag": "by_user",
+   "context": {
+    "distinct_id": "u0",
+    "contexts": {
+     "user": {
+      "key": "u1"
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  }
+ ]
+}

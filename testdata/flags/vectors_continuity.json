@@ -1,0 +1,114 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "LC-FLG-34: experience continuity (hash_override).",
+ "hash_vectors": [
+  {
+   "input": "cont.s.u0",
+   "numerator": 589995708853044,
+   "hash": 0.13100536407973795
+  }
+ ],
+ "flags": [
+  {
+   "key": "cont",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "conditions": [
+    {
+     "rollout_pct": 50
+    }
+   ],
+   "aggregation": {
+    "kind": "person"
+   },
+   "continuity": true
+  },
+  {
+   "key": "plain",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "conditions": [
+    {
+     "rollout_pct": 50
+    }
+   ],
+   "aggregation": {
+    "kind": "person"
+   }
+  },
+  {
+   "key": "cont_group",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "conditions": [
+    {
+     "rollout_pct": 50
+    }
+   ],
+   "aggregation": {
+    "kind": "group",
+    "group_type": "org"
+   },
+   "continuity": true
+  }
+ ],
+ "vectors": [
+  {
+   "name": "identified id hashes on its own without an override",
+   "flag": "cont",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "override buckets on the pre-identify id",
+   "flag": "cont",
+   "context": {
+    "distinct_id": "u1",
+    "hash_override": "u0"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "flag without continuity ignores the override",
+   "flag": "plain",
+   "context": {
+    "distinct_id": "u1",
+    "hash_override": "u0"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "group aggregation ignores the override",
+   "flag": "cont_group",
+   "context": {
+    "distinct_id": "u1",
+    "groups": {
+     "org": "u1"
+    },
+    "hash_override": "u0"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  }
+ ]
+}

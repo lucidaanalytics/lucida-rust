@@ -1,0 +1,604 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "LC-EXT-29: sticky bucketing (stored assignments survive allocation changes).",
+ "hash_vectors": [
+  {
+   "input": "sb_mv.s.variant.u1",
+   "numerator": 3794017720380084,
+   "hash": 0.8424411658003637
+  },
+  {
+   "input": "holdout.H.u1",
+   "numerator": 903615812843724,
+   "hash": 0.20064301616689573
+  }
+ ],
+ "flags": [
+  {
+   "key": "sb_bool",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "plan",
+       "op": "eq",
+       "value": "pro"
+      }
+     ],
+     "rollout_pct": 0
+    }
+   ],
+   "sticky": true
+  },
+  {
+   "key": "sb_two",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "plan",
+       "op": "eq",
+       "value": "pro"
+      }
+     ],
+     "rollout_pct": 0
+    },
+    {
+     "rollout_pct": 0
+    }
+   ],
+   "sticky": true
+  },
+  {
+   "key": "sb_mv",
+   "type": "multivariate",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "sticky": true,
+   "variants": [
+    {
+     "key": "control",
+     "rollout_pct": 100,
+     "payload": {
+      "c": 1
+     }
+    },
+    {
+     "key": "test",
+     "rollout_pct": 0,
+     "payload": {
+      "t": 1
+     }
+    }
+   ]
+  },
+  {
+   "key": "sb_override",
+   "type": "multivariate",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100,
+     "variant_override": "control"
+    }
+   ],
+   "sticky": true,
+   "variants": [
+    {
+     "key": "control",
+     "rollout_pct": 100,
+     "payload": {
+      "c": 1
+     }
+    },
+    {
+     "key": "test",
+     "rollout_pct": 0,
+     "payload": {
+      "t": 1
+     }
+    }
+   ]
+  },
+  {
+   "key": "sb_json",
+   "type": "json",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 0
+    }
+   ],
+   "sticky": true,
+   "payload": {
+    "a": 1
+   }
+  },
+  {
+   "key": "sb_killed",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "sticky": true,
+   "kill_switch": true
+  },
+  {
+   "key": "sb_holdout",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "sticky": true,
+   "holdout": {
+    "salt": "H",
+    "percentage": 100
+   }
+  },
+  {
+   "key": "sb_cohort",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "cohort",
+       "key": "c1",
+       "op": "in"
+      }
+     ],
+     "rollout_pct": 0
+    }
+   ],
+   "sticky": true
+  },
+  {
+   "key": "sb_group",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "group",
+    "group_type": "company"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 0
+    }
+   ],
+   "sticky": true
+  },
+  {
+   "key": "sb_prereq",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "sticky": true,
+   "prerequisites": [
+    {
+     "flag": "sb_killed",
+     "value": true
+    }
+   ]
+  },
+  {
+   "key": "plain_mv",
+   "type": "multivariate",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "variants": [
+    {
+     "key": "control",
+     "rollout_pct": 100,
+     "payload": {
+      "c": 1
+     }
+    },
+    {
+     "key": "test",
+     "rollout_pct": 0,
+     "payload": {
+      "t": 1
+     }
+    }
+   ]
+  }
+ ],
+ "vectors": [
+  {
+   "name": "stored on survives rollout cut to 0",
+   "flag": "sb_bool",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    },
+    "sticky_assignments": {
+     "sb_bool": true
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "sticky_bucket",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "no stored assignment: rollout 0 serves nobody",
+   "flag": "sb_bool",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "targeting still applies to a stored assignment",
+   "flag": "sb_bool",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "free"
+    },
+    "sticky_assignments": {
+     "sb_bool": true
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "stored false is not sticky",
+   "flag": "sb_bool",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    },
+    "sticky_assignments": {
+     "sb_bool": false
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "stored variant on a boolean flag is ignored",
+   "flag": "sb_bool",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    },
+    "sticky_assignments": {
+     "sb_bool": "test"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "first condition whose filters pass decides",
+   "flag": "sb_two",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "free"
+    },
+    "sticky_assignments": {
+     "sb_two": true
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "sticky_bucket",
+    "condition_index": 1
+   }
+  },
+  {
+   "name": "stored variant wins over the hash",
+   "flag": "sb_mv",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_mv": "test"
+    }
+   },
+   "expected": {
+    "value": "test",
+    "reason": "sticky_bucket",
+    "condition_index": 0,
+    "variant": "test",
+    "payload": {
+     "t": 1
+    }
+   }
+  },
+  {
+   "name": "unknown stored variant falls back to hashing",
+   "flag": "sb_mv",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_mv": "gone"
+    }
+   },
+   "expected": {
+    "value": "control",
+    "variant": "control",
+    "payload": {
+     "c": 1
+    },
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "stored true on a multivariate flag is ignored",
+   "flag": "sb_mv",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_mv": true
+    }
+   },
+   "expected": {
+    "value": "control",
+    "variant": "control",
+    "payload": {
+     "c": 1
+    },
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "variant_override wins over the stored variant",
+   "flag": "sb_override",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_override": "test"
+    }
+   },
+   "expected": {
+    "value": "control",
+    "variant": "control",
+    "payload": {
+     "c": 1
+    },
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "json flag keeps payload",
+   "flag": "sb_json",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_json": true
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "sticky_bucket",
+    "condition_index": 0,
+    "payload": {
+     "a": 1
+    }
+   }
+  },
+  {
+   "name": "kill switch beats stored",
+   "flag": "sb_killed",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_killed": true
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "kill_switch",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "holdout beats stored",
+   "flag": "sb_holdout",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_holdout": true
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "holdout",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "cohort filter still needs the server",
+   "flag": "sb_cohort",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_cohort": true
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "requires_server",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "no bucketing key beats stored",
+   "flag": "sb_group",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_group": true
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_bucketing_key",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "group aggregation keeps stored",
+   "flag": "sb_group",
+   "context": {
+    "distinct_id": "u1",
+    "groups": {
+     "company": "acme"
+    },
+    "sticky_assignments": {
+     "sb_group": true
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "sticky_bucket",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "failed prerequisite beats stored",
+   "flag": "sb_prereq",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_prereq": true
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "prerequisite_failed",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "flag without sticky ignores assignments",
+   "flag": "plain_mv",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "plain_mv": "test"
+    }
+   },
+   "expected": {
+    "value": "control",
+    "variant": "control",
+    "payload": {
+     "c": 1
+    },
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "assignments for other flags are ignored",
+   "flag": "sb_mv",
+   "context": {
+    "distinct_id": "u1",
+    "sticky_assignments": {
+     "sb_bool": true
+    }
+   },
+   "expected": {
+    "value": "control",
+    "variant": "control",
+    "payload": {
+     "c": 1
+    },
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  }
+ ]
+}

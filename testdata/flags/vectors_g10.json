@@ -1,0 +1,366 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "G10: device aggregation, flag filter on requires_server flags, namespace and holdout.",
+ "hash_vectors": [
+  {
+   "input": "namespace.L.user0",
+   "numerator": 726628810319706,
+   "hash": 0.16134400711458463
+  },
+  {
+   "input": "holdout.H.user0",
+   "numerator": 3728763190550802,
+   "hash": 0.8279517495048521
+  }
+ ],
+ "flags": [
+  {
+   "key": "dev",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "device"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "srv",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "cohort",
+       "key": "c1",
+       "op": "in"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "viaflag",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "srv",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "viaflag_fail",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "plan",
+       "op": "eq",
+       "value": "pro"
+      },
+      {
+       "type": "flag",
+       "key": "srv",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "ns",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "namespace": {
+    "salt": "L",
+    "start": 0,
+    "end": 5000,
+    "total": 10000
+   }
+  },
+  {
+   "key": "ho",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "holdout": {
+    "salt": "H",
+    "percentage": 50
+   }
+  }
+ ],
+ "vectors": [
+  {
+   "name": "device uses device_id",
+   "flag": "dev",
+   "context": {
+    "distinct_id": "u1",
+    "device_id": "d1"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "device without device_id ignores distinct_id",
+   "flag": "dev",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_bucketing_key",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "cohort flag",
+   "flag": "srv",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "requires_server",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "flag filter on requires_server flag propagates",
+   "flag": "viaflag",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "requires_server",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "local failure beats requires_server flag filter",
+   "flag": "viaflag_fail",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "free"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "local pass + requires_server flag filter",
+   "flag": "viaflag_fail",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "plan": "pro"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "requires_server",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "namespace in range user0",
+   "flag": "ns",
+   "context": {
+    "distinct_id": "user0"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "namespace in range user3",
+   "flag": "ns",
+   "context": {
+    "distinct_id": "user3"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "namespace in range user9",
+   "flag": "ns",
+   "context": {
+    "distinct_id": "user9"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "namespace out of range user1",
+   "flag": "ns",
+   "context": {
+    "distinct_id": "user1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "namespace_excluded",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "namespace out of range user2",
+   "flag": "ns",
+   "context": {
+    "distinct_id": "user2"
+   },
+   "expected": {
+    "value": false,
+    "reason": "namespace_excluded",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "namespace out of range user4",
+   "flag": "ns",
+   "context": {
+    "distinct_id": "user4"
+   },
+   "expected": {
+    "value": false,
+    "reason": "namespace_excluded",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "holdout miss user0",
+   "flag": "ho",
+   "context": {
+    "distinct_id": "user0"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "holdout miss user1",
+   "flag": "ho",
+   "context": {
+    "distinct_id": "user1"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "holdout miss user3",
+   "flag": "ho",
+   "context": {
+    "distinct_id": "user3"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "holdout hit user2",
+   "flag": "ho",
+   "context": {
+    "distinct_id": "user2"
+   },
+   "expected": {
+    "value": false,
+    "reason": "holdout",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "holdout hit user6",
+   "flag": "ho",
+   "context": {
+    "distinct_id": "user6"
+   },
+   "expected": {
+    "value": false,
+    "reason": "holdout",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "holdout hit user10",
+   "flag": "ho",
+   "context": {
+    "distinct_id": "user10"
+   },
+   "expected": {
+    "value": false,
+    "reason": "holdout",
+    "condition_index": -1
+   }
+  }
+ ]
+}

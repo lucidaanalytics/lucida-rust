@@ -1,0 +1,2755 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "Spec v2: string affix, icontains, between, date and semver operators; early_exit; per-condition aggregation; app_contexts. Context.now pins relative dates.",
+ "hash_vectors": [
+  {
+   "input": "half.s.c2",
+   "numerator": 1913829448353630,
+   "hash": 0.4249555037535724
+  },
+  {
+   "input": "half_p.s.u1",
+   "numerator": 1923109824009387,
+   "hash": 0.4270161610996108
+  },
+  {
+   "input": "mv.s.variant.c2",
+   "numerator": 4080105836197397,
+   "hash": 0.9059654884507655
+  }
+ ],
+ "flags": [
+  {
+   "key": "op0_icontains",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "icontains",
+       "value": "ABC"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op1_not_icontains",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "not_icontains",
+       "value": "ABC"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op2_starts_with",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "starts_with",
+       "value": "ab"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op3_not_starts_with",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "not_starts_with",
+       "value": "ab"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op4_ends_with",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ends_with",
+       "value": "bc"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op5_not_ends_with",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "not_ends_with",
+       "value": "bc"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op6_between",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "between",
+       "value": [
+        1,
+        10
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op7_between",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "between",
+       "value": [
+        1
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op8_not_between",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "not_between",
+       "value": [
+        1,
+        10
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op9_is_date_before",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_before",
+       "value": "2026-01-01"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op10_is_date_before",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_before",
+       "value": "-7d"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op11_is_date_before",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_before",
+       "value": "-1m"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op12_is_date_before",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_before",
+       "value": "-1y"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op13_is_date_before",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_before",
+       "value": "2026-01-01T00:00:00+02:00"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op14_is_date_after",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_after",
+       "value": "-3h"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op15_is_date_after",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_after",
+       "value": "-2w"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op16_is_date_after",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "is_date_after",
+       "value": "2026-01-01"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op17_semver_eq",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_eq",
+       "value": "3.10"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op18_semver_neq",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_neq",
+       "value": "1.2.3"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op19_semver_gt",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_gt",
+       "value": "1.9.0"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op20_semver_gte",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_gte",
+       "value": "2.0"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op21_semver_lt",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_lt",
+       "value": "2.0.0"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op22_semver_lte",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_lte",
+       "value": "2.0.0"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op23_semver_tilde",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_tilde",
+       "value": "1.2.3"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op24_semver_tilde",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_tilde",
+       "value": "1"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op25_semver_caret",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_caret",
+       "value": "1.2.3"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op26_semver_caret",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_caret",
+       "value": "0.2.3"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op27_semver_caret",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_caret",
+       "value": "0.0.3"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op28_semver_wildcard",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_wildcard",
+       "value": "1.2.*"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op29_semver_wildcard",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_wildcard",
+       "value": "1.x"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op30_semver_wildcard",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_wildcard",
+       "value": "*"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "op31_semver_wildcard",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "semver_wildcard",
+       "value": "1.2"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "appver",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "app_version",
+       "key": "app_version",
+       "op": "semver_caret",
+       "value": "2.1.0"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "ee",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "early_exit": true,
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "eq",
+       "value": "a"
+      }
+     ],
+     "rollout_pct": 0
+    },
+    {
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "ee_off",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "eq",
+       "value": "a"
+      }
+     ],
+     "rollout_pct": 0
+    },
+    {
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "mix",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "aggregation": {
+      "kind": "group",
+      "group_type": "company"
+     },
+     "filters": [
+      {
+       "type": "group",
+       "group_type": "company",
+       "key": "plan",
+       "op": "eq",
+       "value": "pro"
+      }
+     ],
+     "rollout_pct": 100
+    },
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "eq",
+       "value": "a"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "grp_only",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "aggregation": {
+      "kind": "group",
+      "group_type": "company"
+     },
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "grp_holdout",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "holdout": {
+    "salt": "H",
+    "percentage": 0
+   },
+   "conditions": [
+    {
+     "aggregation": {
+      "kind": "group",
+      "group_type": "company"
+     },
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "half",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "aggregation": {
+      "kind": "group",
+      "group_type": "company"
+     },
+     "rollout_pct": 50
+    }
+   ]
+  },
+  {
+   "key": "half_p",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 50
+    }
+   ]
+  },
+  {
+   "key": "mv",
+   "type": "multivariate",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "variants": [
+    {
+     "key": "a",
+     "rollout_pct": 50
+    },
+    {
+     "key": "b",
+     "rollout_pct": 50
+    }
+   ],
+   "conditions": [
+    {
+     "aggregation": {
+      "kind": "group",
+      "group_type": "company"
+     },
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "ac",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "app_contexts": [
+    "web",
+    "docs"
+   ],
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "ac_inactive",
+   "type": "boolean",
+   "active": false,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "app_contexts": [
+    "web"
+   ],
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ]
+  }
+ ],
+ "vectors": [
+  {
+   "name": "icontains \"ABC\" on \"xxabcxx\"",
+   "flag": "op0_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "xxabcxx"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "icontains \"ABC\" on \"XABCX\"",
+   "flag": "op0_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "XABCX"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "icontains \"ABC\" on \"abd\"",
+   "flag": "op0_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "abd"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "icontains \"ABC\" on 5",
+   "flag": "op0_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 5
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "icontains \"ABC\" on \"__missing__\"",
+   "flag": "op0_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_icontains \"ABC\" on \"xabc\"",
+   "flag": "op1_not_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "xabc"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_icontains \"ABC\" on \"zzz\"",
+   "flag": "op1_not_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "zzz"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "not_icontains \"ABC\" on \"__missing__\"",
+   "flag": "op1_not_icontains",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "starts_with \"ab\" on \"abc\"",
+   "flag": "op2_starts_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "abc"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "starts_with \"ab\" on \"ABc\"",
+   "flag": "op2_starts_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "ABc"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "starts_with \"ab\" on \"cab\"",
+   "flag": "op2_starts_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "cab"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "starts_with \"ab\" on 12",
+   "flag": "op2_starts_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 12
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_starts_with \"ab\" on \"abc\"",
+   "flag": "op3_not_starts_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "abc"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_starts_with \"ab\" on \"xab\"",
+   "flag": "op3_not_starts_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "xab"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "not_starts_with \"ab\" on \"__missing__\"",
+   "flag": "op3_not_starts_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ends_with \"bc\" on \"abc\"",
+   "flag": "op4_ends_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "abc"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ends_with \"bc\" on \"bca\"",
+   "flag": "op4_ends_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "bca"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ends_with \"bc\" on \"aBC\"",
+   "flag": "op4_ends_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "aBC"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_ends_with \"bc\" on \"abc\"",
+   "flag": "op5_not_ends_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "abc"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_ends_with \"bc\" on \"abx\"",
+   "flag": "op5_not_ends_with",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "abx"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "between [1, 10] on 5",
+   "flag": "op6_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 5
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "between [1, 10] on 1",
+   "flag": "op6_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 1
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "between [1, 10] on 10",
+   "flag": "op6_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 10
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "between [1, 10] on \"7\"",
+   "flag": "op6_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "7"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "between [1, 10] on 11",
+   "flag": "op6_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 11
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "between [1, 10] on \"x\"",
+   "flag": "op6_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "x"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "between [1, 10] on \"__missing__\"",
+   "flag": "op6_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "between [1] on 5",
+   "flag": "op7_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 5
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_between [1, 10] on 11",
+   "flag": "op8_not_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 11
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "not_between [1, 10] on 0.5",
+   "flag": "op8_not_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 0.5
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "not_between [1, 10] on 5",
+   "flag": "op8_not_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 5
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_between [1, 10] on \"x\"",
+   "flag": "op8_not_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "x"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "not_between [1, 10] on \"__missing__\"",
+   "flag": "op8_not_between",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01\" on \"2025-12-31\"",
+   "flag": "op9_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2025-12-31"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01\" on \"2026-01-01\"",
+   "flag": "op9_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-01-01"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01\" on \"2026-01-01T00:00:01Z\"",
+   "flag": "op9_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-01-01T00:00:01Z"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01\" on 1735689600",
+   "flag": "op9_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 1735689600
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01\" on \"not a date\"",
+   "flag": "op9_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "not a date"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01\" on \"__missing__\"",
+   "flag": "op9_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"-7d\" on \"2026-06-01T00:00:00Z\"",
+   "flag": "op10_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-06-01T00:00:00Z"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_before \"-7d\" on \"2026-06-10T00:00:00Z\"",
+   "flag": "op10_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-06-10T00:00:00Z"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"-1m\" on \"2026-05-15T11:59:59Z\"",
+   "flag": "op11_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-05-15T11:59:59Z"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_before \"-1m\" on \"2026-05-17T00:00:00Z\"",
+   "flag": "op11_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-05-17T00:00:00Z"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"-1y\" on \"2025-06-15T12:00:00Z\"",
+   "flag": "op12_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2025-06-15T12:00:00Z"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"-1y\" on \"2025-06-15T11:59:59Z\"",
+   "flag": "op12_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2025-06-15T11:59:59Z"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01T00:00:00+02:00\" on \"2025-12-31T23:00:00Z\"",
+   "flag": "op13_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2025-12-31T23:00:00Z"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_before \"2026-01-01T00:00:00+02:00\" on \"2025-12-31T21:59:59.5Z\"",
+   "flag": "op13_is_date_before",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2025-12-31T21:59:59.5Z"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_after \"-3h\" on \"2026-06-15T10:00:00Z\"",
+   "flag": "op14_is_date_after",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-06-15T10:00:00Z"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_after \"-3h\" on \"2026-06-15T08:59:59Z\"",
+   "flag": "op14_is_date_after",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-06-15T08:59:59Z"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_after \"-2w\" on \"2026-05-01\"",
+   "flag": "op15_is_date_after",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-05-01"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_after \"-2w\" on \"2026-06-14\"",
+   "flag": "op15_is_date_after",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-06-14"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_after \"2026-01-01\" on \"2026-01-02\"",
+   "flag": "op16_is_date_after",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-01-02"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "is_date_after \"2026-01-01\" on \"2026-01-01T00:00:00Z\"",
+   "flag": "op16_is_date_after",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2026-01-01T00:00:00Z"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "is_date_after \"2026-01-01\" on 1767225601",
+   "flag": "op16_is_date_after",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 1767225601
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_eq \"3.10\" on \"3.10.0\"",
+   "flag": "op17_semver_eq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "3.10.0"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_eq \"3.10\" on \"v3.010\"",
+   "flag": "op17_semver_eq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "v3.010"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_eq \"3.10\" on \"3.10.0-beta+7\"",
+   "flag": "op17_semver_eq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "3.10.0-beta+7"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_eq \"3.10\" on \"3.10.1\"",
+   "flag": "op17_semver_eq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "3.10.1"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_eq \"3.10\" on \"abc\"",
+   "flag": "op17_semver_eq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "abc"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_eq \"3.10\" on 3.1",
+   "flag": "op17_semver_eq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": 3.1
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_neq \"1.2.3\" on \"1.2.4\"",
+   "flag": "op18_semver_neq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.4"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_neq \"1.2.3\" on \"1.2.3\"",
+   "flag": "op18_semver_neq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.3"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_neq \"1.2.3\" on \"x.y\"",
+   "flag": "op18_semver_neq",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "x.y"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_gt \"1.9.0\" on \"1.10.0\"",
+   "flag": "op19_semver_gt",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.10.0"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_gt \"1.9.0\" on \"1.9\"",
+   "flag": "op19_semver_gt",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.9"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_gt \"1.9.0\" on \"1.8.99\"",
+   "flag": "op19_semver_gt",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.8.99"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_gte \"2.0\" on \"2.0.0\"",
+   "flag": "op20_semver_gte",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2.0.0"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_gte \"2.0\" on \"1.99.99\"",
+   "flag": "op20_semver_gte",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.99.99"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_lt \"2.0.0\" on \"1.99.99\"",
+   "flag": "op21_semver_lt",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.99.99"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_lt \"2.0.0\" on \"2\"",
+   "flag": "op21_semver_lt",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_lte \"2.0.0\" on \"2.0.0\"",
+   "flag": "op22_semver_lte",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2.0.0"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_lte \"2.0.0\" on \"2.0.1\"",
+   "flag": "op22_semver_lte",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2.0.1"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_tilde \"1.2.3\" on \"1.2.3\"",
+   "flag": "op23_semver_tilde",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.3"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_tilde \"1.2.3\" on \"1.2.9\"",
+   "flag": "op23_semver_tilde",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.9"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_tilde \"1.2.3\" on \"1.3.0\"",
+   "flag": "op23_semver_tilde",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.3.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_tilde \"1.2.3\" on \"1.2.2\"",
+   "flag": "op23_semver_tilde",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.2"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_tilde \"1\" on \"1.9.9\"",
+   "flag": "op24_semver_tilde",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.9.9"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_tilde \"1\" on \"2.0.0\"",
+   "flag": "op24_semver_tilde",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2.0.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_tilde \"1\" on \"0.9\"",
+   "flag": "op24_semver_tilde",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "0.9"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_caret \"1.2.3\" on \"1.9.0\"",
+   "flag": "op25_semver_caret",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.9.0"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_caret \"1.2.3\" on \"2.0.0\"",
+   "flag": "op25_semver_caret",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2.0.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_caret \"1.2.3\" on \"1.2.2\"",
+   "flag": "op25_semver_caret",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.2"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_caret \"0.2.3\" on \"0.2.9\"",
+   "flag": "op26_semver_caret",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "0.2.9"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_caret \"0.2.3\" on \"0.3.0\"",
+   "flag": "op26_semver_caret",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "0.3.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_caret \"0.0.3\" on \"0.0.3\"",
+   "flag": "op27_semver_caret",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "0.0.3"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_caret \"0.0.3\" on \"0.0.4\"",
+   "flag": "op27_semver_caret",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "0.0.4"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_wildcard \"1.2.*\" on \"1.2.7\"",
+   "flag": "op28_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.7"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_wildcard \"1.2.*\" on \"1.2\"",
+   "flag": "op28_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_wildcard \"1.2.*\" on \"1.3.0\"",
+   "flag": "op28_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.3.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_wildcard \"1.x\" on \"1.99.0\"",
+   "flag": "op29_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.99.0"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_wildcard \"1.x\" on \"2.0.0\"",
+   "flag": "op29_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "2.0.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_wildcard \"1.x\" on \"0.9\"",
+   "flag": "op29_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "0.9"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_wildcard \"*\" on \"0.0.1\"",
+   "flag": "op30_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "0.0.1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "semver_wildcard \"*\" on \"garbage\"",
+   "flag": "op30_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "garbage"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "semver_wildcard \"1.2\" on \"1.2.0\"",
+   "flag": "op31_semver_wildcard",
+   "context": {
+    "distinct_id": "u1",
+    "now": "2026-06-15T12:00:00Z",
+    "person_properties": {
+     "p": "1.2.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "app_version caret in range",
+   "flag": "appver",
+   "context": {
+    "distinct_id": "u1",
+    "app_version": "2.5.0"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "app_version caret out of range",
+   "flag": "appver",
+   "context": {
+    "distinct_id": "u1",
+    "app_version": "3.0.0"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "early exit stops at the first matching condition",
+   "flag": "ee",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "a"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "out_of_rollout",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "early exit: non-matching filters still fall through",
+   "flag": "ee",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "b"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 1
+   }
+  },
+  {
+   "name": "without early exit a rollout miss falls through",
+   "flag": "ee_off",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "a"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 1
+   }
+  },
+  {
+   "name": "group condition matches on the group",
+   "flag": "mix",
+   "context": {
+    "distinct_id": "u1",
+    "groups": {
+     "company": "c1"
+    },
+    "group_properties": {
+     "company": {
+      "plan": "pro"
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "group condition skipped without the group",
+   "flag": "mix",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "a"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 1
+   }
+  },
+  {
+   "name": "all conditions miss",
+   "flag": "mix",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "b"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "no distinct id: group condition still decides",
+   "flag": "mix",
+   "context": {
+    "groups": {
+     "company": "c1"
+    },
+    "group_properties": {
+     "company": {
+      "plan": "pro"
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "every condition lacks its unit",
+   "flag": "grp_only",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_bucketing_key",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "holdout needs the flag-level unit",
+   "flag": "grp_holdout",
+   "context": {
+    "groups": {
+     "company": "c1"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_bucketing_key",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "rollout hashes the group key",
+   "flag": "half",
+   "context": {
+    "distinct_id": "u1",
+    "groups": {
+     "company": "c2"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "flag-level unit unchanged",
+   "flag": "half_p",
+   "context": {
+    "distinct_id": "u1",
+    "groups": {
+     "company": "c2"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "variant hashes the group key",
+   "flag": "mv",
+   "context": {
+    "distinct_id": "u1",
+    "groups": {
+     "company": "c2"
+    }
+   },
+   "expected": {
+    "value": "b",
+    "reason": "condition_match",
+    "condition_index": 0,
+    "variant": "b"
+   }
+  },
+  {
+   "name": "app context mismatch",
+   "flag": "ac",
+   "context": {
+    "distinct_id": "u1",
+    "app_contexts": [
+     "mobile"
+    ]
+   },
+   "expected": {
+    "value": false,
+    "reason": "app_context_excluded",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "app context match",
+   "flag": "ac",
+   "context": {
+    "distinct_id": "u1",
+    "app_contexts": [
+     "mobile",
+     "docs"
+    ]
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "request without app contexts is not filtered",
+   "flag": "ac",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "app context checked before active",
+   "flag": "ac_inactive",
+   "context": {
+    "distinct_id": "u1",
+    "app_contexts": [
+     "api"
+    ]
+   },
+   "expected": {
+    "value": false,
+    "reason": "app_context_excluded",
+    "condition_index": -1
+   }
+  }
+ ]
+}
