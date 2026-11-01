@@ -30,7 +30,7 @@ flate2 = "1"
 regex = "1"
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
 serde_json = "1"
-sha2 = "0.10"
+sha2 = "0.11"
 tokio = { version = "1", optional = true, features = ["rt", "sync", "time", "macros"] }
 
 [dev-dependencies]
