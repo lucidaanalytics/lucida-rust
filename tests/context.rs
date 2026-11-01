@@ -187,7 +187,7 @@ fn dropped_batch_reports_on_error_and_respects_max_batch_size() {
             max_batch_size: 2,
             flush_interval: Duration::from_secs(3600),
             on_error: Some(OnError::new(move |_, ev| {
-                e.lock().expect("lock").push(ev.len())
+                e.lock().expect("lock").push(ev.len());
             })),
             ..Options::default()
         },
@@ -241,13 +241,14 @@ async fn async_context_follows_the_task() {
     )
     .await;
     c.capture(&Event::new("x", "outside"));
-    let v = seen.lock().expect("lock");
-    assert_eq!(
-        (v[0]["distinct_id"].clone(), v[0]["properties"]["k"].clone()),
-        ("t1".into(), 1.into())
-    );
-    assert!(v[1]["properties"].get("k").is_none());
-    drop(v);
+    {
+        let v = seen.lock().expect("lock");
+        assert_eq!(
+            (v[0]["distinct_id"].clone(), v[0]["properties"]["k"].clone()),
+            ("t1".into(), 1.into())
+        );
+        assert!(v[1]["properties"].get("k").is_none());
+    }
     c.shutdown().await;
 }
 
