@@ -287,7 +287,10 @@ fn remote_config_payload_gets_the_escaped_route_with_the_secret() {
     let p = c.get_remote_config_payload("a/b").expect("secret set");
     assert_eq!(p, Some(serde_json::json!({"a": 1})));
     assert!(heads.lock().expect("lock")[0].contains("authorization: bearer lc_sk"));
-    assert_eq!(c.get_remote_config_payload("nope").expect("secret set"), None);
+    assert_eq!(
+        c.get_remote_config_payload("nope").expect("secret set"),
+        None
+    );
     c.shutdown();
     let none = Client::new(
         "k",

@@ -532,7 +532,9 @@ pub(crate) fn remote_config_payload(status: u16, body: &[u8]) -> Option<Value> {
         return None;
     }
     let mut j = serde_json::from_slice::<Value>(body).ok()?;
-    j.get_mut("payload").map(Value::take).filter(|v| !v.is_null())
+    j.get_mut("payload")
+        .map(Value::take)
+        .filter(|v| !v.is_null())
 }
 
 pub(crate) fn parse_remote(j: &Value) -> HashMap<String, Resolved> {
@@ -600,9 +602,14 @@ mod anon_tests {
             anon_distinct_id: Some("anon-9".into()),
             ..FlagOptions::default()
         };
-        assert_eq!(remote_body("k", "u", &o, None)["anon_distinct_id"], "anon-9");
-        assert!(remote_body("k", "u", &FlagOptions::default(), None)
-            .get("anon_distinct_id")
-            .is_none());
+        assert_eq!(
+            remote_body("k", "u", &o, None)["anon_distinct_id"],
+            "anon-9"
+        );
+        assert!(
+            remote_body("k", "u", &FlagOptions::default(), None)
+                .get("anon_distinct_id")
+                .is_none()
+        );
     }
 }

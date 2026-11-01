@@ -8,7 +8,8 @@ use lucida::{Client, Event, FlagValue, Options, evaluate_all, hash01};
 use serde_json::{Value, json};
 
 fn load(name: &str) -> Value {
-    let root = std::env::var("LUCIDA_TESTDATA").unwrap_or_else(|_| format!("{}/../../testdata", env!("CARGO_MANIFEST_DIR")));
+    let root = std::env::var("LUCIDA_TESTDATA")
+        .unwrap_or_else(|_| format!("{}/../../testdata", env!("CARGO_MANIFEST_DIR")));
     let p = format!("{root}/flags/{name}");
     serde_json::from_slice(&std::fs::read(p).expect("read vectors")).expect("parse vectors")
 }
