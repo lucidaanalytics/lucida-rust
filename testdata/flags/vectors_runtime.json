@@ -1,0 +1,118 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "Runtime-event targeting (P-H6): event filters on session / page view counts, full evaluation with Context.runtime_events and server partial evaluation into Result.runtime branches; JSON merge-patch rule values (P-L10). Every rollout is 0 or 100 and variants come from variant_override, so no expected value depends on the hash.",
+ "hash_vectors": [],
+ "flags": [
+  {
+   "key": "rt_session",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {"kind": "person"},
+   "conditions": [
+    {"filters": [{"type": "event", "key": "signup", "op": "is_set", "scope": "session"}], "rollout_pct": 100}
+   ]
+  },
+  {
+   "key": "rt_mv",
+   "type": "multivariate",
+   "active": true,
+   "salt": "s",
+   "aggregation": {"kind": "person"},
+   "variants": [
+    {"key": "a", "rollout_pct": 50, "payload": {"color": "red", "size": 1}},
+    {"key": "b", "rollout_pct": 50, "payload": {"color": "blue"}}
+   ],
+   "conditions": [
+    {
+     "filters": [
+      {"type": "person", "key": "plan", "op": "eq", "value": "pro"},
+      {"type": "event", "key": "view_item", "op": "gte", "value": 3, "scope": "page"}
+     ],
+     "rollout_pct": 100,
+     "variant_override": "b",
+     "payload_patch": {"size": 2}
+    },
+    {"rollout_pct": 100, "variant_override": "a"}
+   ]
+  },
+  {
+   "key": "rt_not",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {"kind": "person"},
+   "conditions": [
+    {"filters": [{"type": "event", "key": "purchase", "op": "is_not_set"}], "rollout_pct": 100}
+   ]
+  },
+  {
+   "key": "rt_early",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "early_exit": true,
+   "aggregation": {"kind": "person"},
+   "conditions": [
+    {"filters": [{"type": "event", "key": "x", "op": "is_set"}], "rollout_pct": 0},
+    {"rollout_pct": 100}
+   ]
+  },
+  {
+   "key": "l10_json",
+   "type": "json",
+   "active": true,
+   "salt": "s",
+   "aggregation": {"kind": "person"},
+   "payload": {"theme": "light", "banner": {"text": "hi", "color": "grey"}, "beta": true},
+   "conditions": [
+    {
+     "filters": [{"type": "person", "key": "country", "op": "eq", "value": "DE"}],
+     "rollout_pct": 100,
+     "payload_patch": {"banner": {"text": "hallo", "color": null}, "beta": null, "lang": "de"}
+    },
+    {"rollout_pct": 100}
+   ]
+  }
+ ],
+ "vectors": [
+  {"name": "session event done", "flag": "rt_session", "context": {"distinct_id": "u1", "runtime_events": {"session": {"signup": 1}}},
+   "expected": {"value": true, "reason": "condition_match", "condition_index": 0}},
+  {"name": "session event not done", "flag": "rt_session", "context": {"distinct_id": "u1", "runtime_events": {"session": {}}},
+   "expected": {"value": false, "reason": "no_condition_match", "condition_index": -1}},
+  {"name": "page count is not a session count", "flag": "rt_session", "context": {"distinct_id": "u1", "runtime_events": {"page": {"signup": 1}}},
+   "expected": {"value": false, "reason": "no_condition_match", "condition_index": -1}},
+  {"name": "server: event condition becomes a branch", "flag": "rt_session", "context": {"distinct_id": "u1"},
+   "expected": {"value": false, "reason": "no_condition_match", "condition_index": -1,
+    "runtime": [{"filters": [{"type": "event", "key": "signup", "op": "is_set", "scope": "session"}],
+     "result": {"value": true, "reason": "condition_match", "condition_index": 0}}]}},
+  {"name": "page count reached, patched variant payload", "flag": "rt_mv", "context": {"distinct_id": "u1", "person_properties": {"plan": "pro"}, "runtime_events": {"page": {"view_item": 3}}},
+   "expected": {"value": "b", "variant": "b", "payload": {"color": "blue", "size": 2}, "reason": "condition_match", "condition_index": 0}},
+  {"name": "page count short, falls through", "flag": "rt_mv", "context": {"distinct_id": "u1", "person_properties": {"plan": "pro"}, "runtime_events": {"page": {"view_item": 2}}},
+   "expected": {"value": "a", "variant": "a", "payload": {"color": "red", "size": 1}, "reason": "condition_match", "condition_index": 1}},
+  {"name": "session counts do not satisfy a page filter", "flag": "rt_mv", "context": {"distinct_id": "u1", "person_properties": {"plan": "pro"}, "runtime_events": {"session": {"view_item": 5}}},
+   "expected": {"value": "a", "variant": "a", "payload": {"color": "red", "size": 1}, "reason": "condition_match", "condition_index": 1}},
+  {"name": "server: property fails, no branch", "flag": "rt_mv", "context": {"distinct_id": "u1", "person_properties": {"plan": "free"}},
+   "expected": {"value": "a", "variant": "a", "payload": {"color": "red", "size": 1}, "reason": "condition_match", "condition_index": 1}},
+  {"name": "server: property passes, branch then fallback", "flag": "rt_mv", "context": {"distinct_id": "u1", "person_properties": {"plan": "pro"}},
+   "expected": {"value": "a", "variant": "a", "payload": {"color": "red", "size": 1}, "reason": "condition_match", "condition_index": 1,
+    "runtime": [{"filters": [{"type": "event", "key": "view_item", "op": "gte", "value": 3, "scope": "page"}],
+     "result": {"value": "b", "variant": "b", "payload": {"color": "blue", "size": 2}, "reason": "condition_match", "condition_index": 0}}]}},
+  {"name": "never purchased (empty counts)", "flag": "rt_not", "context": {"distinct_id": "u1", "runtime_events": {}},
+   "expected": {"value": true, "reason": "condition_match", "condition_index": 0}},
+  {"name": "purchased", "flag": "rt_not", "context": {"distinct_id": "u1", "runtime_events": {"session": {"purchase": 2}}},
+   "expected": {"value": false, "reason": "no_condition_match", "condition_index": -1}},
+  {"name": "early exit with the event done", "flag": "rt_early", "context": {"distinct_id": "u1", "runtime_events": {"session": {"x": 1}}},
+   "expected": {"value": false, "reason": "out_of_rollout", "condition_index": 0}},
+  {"name": "early exit without the event", "flag": "rt_early", "context": {"distinct_id": "u1", "runtime_events": {}},
+   "expected": {"value": true, "reason": "condition_match", "condition_index": 1}},
+  {"name": "server: early exit miss is a final branch", "flag": "rt_early", "context": {"distinct_id": "u1"},
+   "expected": {"value": true, "reason": "condition_match", "condition_index": 1,
+    "runtime": [{"filters": [{"type": "event", "key": "x", "op": "is_set"}],
+     "result": {"value": false, "reason": "out_of_rollout", "condition_index": 0}}]}},
+  {"name": "merge patch: nested merge, null deletes, new key", "flag": "l10_json", "context": {"distinct_id": "u1", "person_properties": {"country": "DE"}},
+   "expected": {"value": true, "payload": {"theme": "light", "banner": {"text": "hallo"}, "lang": "de"}, "reason": "condition_match", "condition_index": 0}},
+  {"name": "merge patch: other rule serves the base payload", "flag": "l10_json", "context": {"distinct_id": "u1", "person_properties": {"country": "US"}},
+   "expected": {"value": true, "payload": {"theme": "light", "banner": {"text": "hi", "color": "grey"}, "beta": true}, "reason": "condition_match", "condition_index": 1}}
+ ]
+}

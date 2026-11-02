@@ -1,0 +1,888 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "Event property filters on runtime-event conditions and client re-resolution of flags that depend on a runtime-branched flag (testdata/flags/README.md). Every rollout is 0 or 100 and variants come from variant_override; expected values were derived by hand.",
+ "hash_vectors": [],
+ "flags": [
+  {
+   "key": "ep_purchase",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "purchase",
+       "op": "gte",
+       "value": 2,
+       "scope": "session",
+       "properties": [
+        {
+         "type": "event_property",
+         "key": "plan",
+         "op": "eq",
+         "value": "pro"
+        }
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "ep_view",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "view_item",
+       "op": "is_set",
+       "scope": "page",
+       "properties": [
+        {
+         "type": "event_property",
+         "key": "price",
+         "op": "gt",
+         "value": 100
+        },
+        {
+         "type": "event_property",
+         "key": "category",
+         "op": "in",
+         "value": [
+          "shoes",
+          "bags"
+         ]
+        }
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "dep_base",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "signup",
+       "op": "is_set",
+       "scope": "session"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "dep_prereq",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "prerequisites": [
+    {
+     "flag": "dep_base",
+     "value": true
+    }
+   ]
+  },
+  {
+   "key": "dep_mv",
+   "type": "multivariate",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "dep_base",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100,
+     "variant_override": "b"
+    },
+    {
+     "rollout_pct": 100,
+     "variant_override": "a"
+    }
+   ],
+   "variants": [
+    {
+     "key": "a",
+     "rollout_pct": 50
+    },
+    {
+     "key": "b",
+     "rollout_pct": 50,
+     "payload": {
+      "big": true
+     }
+    }
+   ]
+  },
+  {
+   "key": "dep_chain",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "prerequisites": [
+    {
+     "flag": "dep_prereq",
+     "value": true
+    }
+   ]
+  },
+  {
+   "key": "dep_own",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "dep_base",
+       "op": "eq",
+       "value": true
+      },
+      {
+       "type": "event",
+       "key": "cta",
+       "op": "is_set",
+       "scope": "page"
+      }
+     ],
+     "rollout_pct": 100
+    },
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "x2",
+       "op": "is_set"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "dep_same",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "prerequisites": [
+    {
+     "flag": "dep_base",
+     "value": false
+    }
+   ]
+  }
+ ],
+ "vectors": [
+  {
+   "name": "filtered count reached",
+   "flag": "ep_purchase",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "purchase|[[\"plan\",\"eq\",\"pro\"]]": 2
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "filtered count short",
+   "flag": "ep_purchase",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "purchase|[[\"plan\",\"eq\",\"pro\"]]": 1
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "unfiltered count does not count",
+   "flag": "ep_purchase",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "purchase": 5
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "filtered page count is not a session count",
+   "flag": "ep_purchase",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "page": {
+      "purchase|[[\"plan\",\"eq\",\"pro\"]]": 3
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "server: filtered event filter is a branch",
+   "flag": "ep_purchase",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "event",
+        "key": "purchase",
+        "op": "gte",
+        "value": 2,
+        "scope": "session",
+        "properties": [
+         {
+          "type": "event_property",
+          "key": "plan",
+          "op": "eq",
+          "value": "pro"
+         }
+        ]
+       }
+      ],
+      "result": {
+       "value": true,
+       "reason": "condition_match",
+       "condition_index": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "two predicates, page scope",
+   "flag": "ep_view",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "page": {
+      "view_item|[[\"price\",\"gt\",100],[\"category\",\"in\",[\"shoes\",\"bags\"]]]": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "two predicates, session count only",
+   "flag": "ep_view",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "view_item|[[\"price\",\"gt\",100],[\"category\",\"in\",[\"shoes\",\"bags\"]]]": 1
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "server: two predicates",
+   "flag": "ep_view",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "event",
+        "key": "view_item",
+        "op": "is_set",
+        "scope": "page",
+        "properties": [
+         {
+          "type": "event_property",
+          "key": "price",
+          "op": "gt",
+          "value": 100
+         },
+         {
+          "type": "event_property",
+          "key": "category",
+          "op": "in",
+          "value": [
+           "shoes",
+           "bags"
+          ]
+         }
+        ]
+       }
+      ],
+      "result": {
+       "value": true,
+       "reason": "condition_match",
+       "condition_index": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "server: base",
+   "flag": "dep_base",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "event",
+        "key": "signup",
+        "op": "is_set",
+        "scope": "session"
+       }
+      ],
+      "result": {
+       "value": true,
+       "reason": "condition_match",
+       "condition_index": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "server: prerequisite flips with base",
+   "flag": "dep_prereq",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "prerequisite_failed",
+    "condition_index": -1,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "flag",
+        "key": "dep_base",
+        "op": "eq",
+        "value": true
+       }
+      ],
+      "result": {
+       "value": true,
+       "reason": "condition_match",
+       "condition_index": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "server: flag filter flips variant",
+   "flag": "dep_mv",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": "a",
+    "variant": "a",
+    "reason": "condition_match",
+    "condition_index": 1,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "flag",
+        "key": "dep_base",
+        "op": "eq",
+        "value": true
+       }
+      ],
+      "result": {
+       "value": "b",
+       "variant": "b",
+       "payload": {
+        "big": true
+       },
+       "reason": "condition_match",
+       "condition_index": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "server: chain follows prerequisite",
+   "flag": "dep_chain",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "prerequisite_failed",
+    "condition_index": -1,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "flag",
+        "key": "dep_prereq",
+        "op": "eq",
+        "value": true
+       }
+      ],
+      "result": {
+       "value": true,
+       "reason": "condition_match",
+       "condition_index": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "server: own event branches nest under the flip",
+   "flag": "dep_own",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "flag",
+        "key": "dep_base",
+        "op": "eq",
+        "value": true
+       }
+      ],
+      "result": {
+       "value": false,
+       "reason": "no_condition_match",
+       "condition_index": -1,
+       "runtime": [
+        {
+         "filters": [
+          {
+           "type": "event",
+           "key": "cta",
+           "op": "is_set",
+           "scope": "page"
+          }
+         ],
+         "result": {
+          "value": true,
+          "reason": "condition_match",
+          "condition_index": 0
+         }
+        },
+        {
+         "filters": [
+          {
+           "type": "event",
+           "key": "x2",
+           "op": "is_set"
+          }
+         ],
+         "result": {
+          "value": true,
+          "reason": "condition_match",
+          "condition_index": 1
+         }
+        }
+       ]
+      }
+     },
+     {
+      "filters": [
+       {
+        "type": "event",
+        "key": "x2",
+        "op": "is_set"
+       }
+      ],
+      "result": {
+       "value": true,
+       "reason": "condition_match",
+       "condition_index": 1
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "server: prerequisite on base false",
+   "flag": "dep_same",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0,
+    "runtime": [
+     {
+      "filters": [
+       {
+        "type": "flag",
+        "key": "dep_base",
+        "op": "eq",
+        "value": true
+       }
+      ],
+      "result": {
+       "value": false,
+       "reason": "prerequisite_failed",
+       "condition_index": -1
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "no events: dep_base",
+   "flag": "dep_base",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {}
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "no events: dep_prereq",
+   "flag": "dep_prereq",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {}
+   },
+   "expected": {
+    "value": false,
+    "reason": "prerequisite_failed",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "no events: dep_mv",
+   "flag": "dep_mv",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {}
+   },
+   "expected": {
+    "value": "a",
+    "variant": "a",
+    "reason": "condition_match",
+    "condition_index": 1
+   }
+  },
+  {
+   "name": "no events: dep_chain",
+   "flag": "dep_chain",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {}
+   },
+   "expected": {
+    "value": false,
+    "reason": "prerequisite_failed",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "no events: dep_own",
+   "flag": "dep_own",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {}
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "no events: dep_same",
+   "flag": "dep_same",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {}
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "signup: dep_base",
+   "flag": "dep_base",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "signup": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "signup: dep_prereq",
+   "flag": "dep_prereq",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "signup": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "signup: dep_mv",
+   "flag": "dep_mv",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "signup": 1
+     }
+    }
+   },
+   "expected": {
+    "value": "b",
+    "variant": "b",
+    "payload": {
+     "big": true
+    },
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "signup: dep_chain",
+   "flag": "dep_chain",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "signup": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "signup: dep_own",
+   "flag": "dep_own",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "signup": 1
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "signup: dep_same",
+   "flag": "dep_same",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "signup": 1
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "prerequisite_failed",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "signup + cta: dep_own",
+   "flag": "dep_own",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "signup": 1
+     },
+     "page": {
+      "cta": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "x2 only: dep_own",
+   "flag": "dep_own",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "x2": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 1
+   }
+  },
+  {
+   "name": "cta without signup: dep_own",
+   "flag": "dep_own",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "page": {
+      "cta": 1
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  }
+ ]
+}

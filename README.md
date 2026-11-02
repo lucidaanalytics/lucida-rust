@@ -57,6 +57,10 @@ exported for direct use. Flags that need the server (cohort filters) report `REQ
 It also follows `GET /v1/flags/stream` (`flag_stream`, default on) and reloads on each `definitions` push; it
 reconnects with backoff and the interval poll only reloads while the stream is down.
 
+`Options::fallbacks` (`HashMap<String, FlagValue>`) is served, with reason `fallback` and no exposure, when a flag read
+fails (network, no definitions, quota) or the flag is unknown. `get_feature_flag_details` (both clients) returns a
+`FlagDetails` with `value`, `payload`, `variant`, `reason`, `condition_index`, `request_id` and `locally_evaluated`.
+
 ## Tests
 
 `make sdk-rust`. Flag evaluation is pinned by the shared vectors in `testdata/flags`.

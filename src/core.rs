@@ -60,6 +60,8 @@ pub struct Options {
     pub app_contexts: Vec<String>,
     /// Shares one definitions fetch between workers; see [`FlagDefinitionCache`].
     pub flag_definition_cache: Option<Arc<dyn FlagDefinitionCache>>,
+    /// `flag key -> value` served (reason `fallback`, no exposure) when a flag read fails or the flag is unknown.
+    pub fallbacks: HashMap<String, FlagValue>,
 }
 
 impl Default for Options {
@@ -85,6 +87,7 @@ impl Default for Options {
             on_error: None,
             app_contexts: Vec::new(),
             flag_definition_cache: None,
+            fallbacks: HashMap::new(),
         }
     }
 }
@@ -376,6 +379,9 @@ pub(crate) struct Resolved {
     pub payload: Option<Value>,
     pub locally: bool,
     pub request_id: Option<String>,
+    pub reason: String,
+    pub condition_index: i64,
+    pub variant: Option<String>,
 }
 
 #[derive(Default)]
@@ -460,6 +466,9 @@ impl FlagState {
             payload: r.payload,
             locally: true,
             request_id: None,
+            reason: r.reason.to_owned(),
+            condition_index: r.condition_index,
+            variant: r.variant,
         })
     }
 
@@ -480,6 +489,9 @@ impl FlagState {
                         payload: r.payload,
                         locally: true,
                         request_id: None,
+                        reason: r.reason.to_owned(),
+                        condition_index: r.condition_index,
+                        variant: r.variant,
                     },
                 )
             })
@@ -563,6 +575,12 @@ pub(crate) fn parse_remote(j: &Value) -> HashMap<String, Resolved> {
                 },
             };
             let payload = f.get("payload").filter(|p| !p.is_null()).cloned();
+            let reason = f.get("reason").and_then(Value::as_str).unwrap_or("remote");
+            let variant = f
+                .get("variant")
+                .and_then(Value::as_str)
+                .filter(|s| !s.is_empty())
+                .map(str::to_owned);
             (
                 k.clone(),
                 Resolved {
@@ -570,6 +588,12 @@ pub(crate) fn parse_remote(j: &Value) -> HashMap<String, Resolved> {
                     payload,
                     locally: false,
                     request_id: rid.clone(),
+                    reason: reason.to_owned(),
+                    condition_index: f
+                        .get("condition_index")
+                        .and_then(Value::as_i64)
+                        .unwrap_or(-1),
+                    variant,
                 },
             )
         })

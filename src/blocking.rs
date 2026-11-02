@@ -15,6 +15,7 @@ use crate::core::{
     remote_config_url, retry_delay, retryable, wire,
 };
 use crate::defcache::shutdown_cached;
+use crate::details::{FALLBACK_REASON, FlagDetails, fallback};
 use crate::eval::FlagValue;
 use crate::hooks::build_wire;
 
@@ -417,13 +418,16 @@ impl Client {
 
     fn resolve(&self, key: &str, id: &str, o: &FlagOptions) -> Option<Resolved> {
         let i = &self.inner;
-        i.flags.local_one(key, id, o).or_else(|| {
-            if o.only_evaluate_locally {
-                None
-            } else {
-                i.remote(&i.api_key, id, o, Some(key)).remove(key)
-            }
-        })
+        i.flags
+            .local_one(key, id, o)
+            .or_else(|| {
+                if o.only_evaluate_locally {
+                    None
+                } else {
+                    i.remote(&i.api_key, id, o, Some(key)).remove(key)
+                }
+            })
+            .or_else(|| fallback(&i.opts.fallbacks, key))
     }
 
     /// Flag value, or `None` when unknown / undecidable locally. Emits `$feature_flag_called` and
@@ -435,16 +439,31 @@ impl Client {
         distinct_id: &str,
         o: &FlagOptions,
     ) -> Option<FlagValue> {
+        self.get_feature_flag_details(key, distinct_id, o)
+            .map(|d| d.value)
+    }
+
+    /// [`Self::get_feature_flag`] with the full [`FlagDetails`]; an [`Options::fallbacks`] value has reason `fallback`.
+    #[must_use]
+    pub fn get_feature_flag_details(
+        &self,
+        key: &str,
+        distinct_id: &str,
+        o: &FlagOptions,
+    ) -> Option<FlagDetails> {
         if self.inner.opts.disabled {
             return None;
         }
         let r = self.resolve(key, distinct_id, o)?;
-        if !o.no_exposure && self.inner.flags.first_seen(distinct_id, key, &r.value) {
+        if !o.no_exposure
+            && r.reason != FALLBACK_REASON
+            && self.inner.flags.first_seen(distinct_id, key, &r.value)
+        {
             for e in exposure_events(distinct_id, key, &r) {
                 self.capture(&e);
             }
         }
-        Some(r.value)
+        Some(FlagDetails::new(key, r))
     }
 
     #[must_use]

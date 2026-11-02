@@ -152,3 +152,38 @@ fn broken_cache_means_fetch() {
     );
     c.shutdown();
 }
+
+#[test]
+fn fallbacks_serve_without_exposure_and_details_carry_the_reason() {
+    let (host, _) = server();
+    let (c, seen) = client(host, |o| {
+        o.fallbacks
+            .insert("ghost".into(), lucida::FlagValue::Variant("safe".into()));
+    });
+    let o = FlagOptions::default();
+    let d = c.get_feature_flag_details("ghost", "u", &o).expect("fallback");
+    assert_eq!(d.value, lucida::FlagValue::Variant("safe".into()));
+    assert_eq!(d.reason, "fallback");
+    let a = c.get_feature_flag_details("a", "u", &o).expect("a");
+    assert_eq!(a.value, lucida::FlagValue::Bool(true));
+    assert_eq!((a.reason.as_str(), a.condition_index), ("condition_match", 0));
+    assert!(c.get_feature_flag_details("nope", "u", &o).is_none());
+    let seen = seen.lock().expect("lock");
+    assert!(!seen.is_empty() && seen.iter().all(|e| e["properties"]["$feature_flag"] == "a"));
+}
+
+#[test]
+fn network_failure_serves_the_fallback() {
+    let c = Client::new(
+        "lc_pk_x",
+        Options {
+            host: "http://127.0.0.1:1".into(),
+            max_retries: 0,
+            flush_interval: Duration::from_secs(3600),
+            fallbacks: [("x".to_string(), lucida::FlagValue::Bool(true))].into(),
+            ..Options::default()
+        },
+    );
+    let d = c.get_feature_flag_details("x", "u", &FlagOptions::default());
+    assert_eq!(d.expect("fallback").reason, "fallback");
+}

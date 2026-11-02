@@ -9,6 +9,7 @@ mod blocking;
 mod context;
 mod core;
 mod defcache;
+mod details;
 mod eval;
 mod eval_v2;
 mod global;
@@ -28,6 +29,7 @@ pub use context::{
 #[cfg(feature = "tokio")]
 pub use context::{bind_context_async, with_context_async};
 pub use core::{Error, Event, FlagOptions, Options, Props, VERSION, iso};
+pub use details::{FALLBACK_REASON, FlagDetails};
 pub use defcache::{FlagDefinitionCache, InMemoryFlagDefinitionCache};
 pub use eval::{FlagResult, FlagValue, REQUIRES_SERVER, evaluate_all, hash01};
 #[cfg(feature = "blocking")]

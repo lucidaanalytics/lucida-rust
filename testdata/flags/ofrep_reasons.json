@@ -1,0 +1,27 @@
+{
+ "format": "lucida-ofrep-reasons/1",
+ "description": "How a Lucida flag result maps to an OpenFeature (OFREP) reason or error code (go/gateway/ofrep.go). `condition` is the deciding condition (condition_index 0) when the reason is condition_match; `type` is the flag type (default boolean). OpenFeature providers over /v1/flags can use the same table.",
+ "cases": [
+  {"reason": "inactive", "expect": "DISABLED"},
+  {"reason": "kill_switch", "expect": "DISABLED"},
+  {"reason": "no_condition_match", "expect": "DEFAULT"},
+  {"reason": "prerequisite_failed", "expect": "DEFAULT"},
+  {"reason": "sticky_bucket", "expect": "SPLIT"},
+  {"reason": "out_of_rollout", "expect": "SPLIT"},
+  {"reason": "holdout", "expect": "SPLIT"},
+  {"reason": "namespace_excluded", "expect": "SPLIT"},
+  {"reason": "preview", "expect": "TARGETING_MATCH"},
+  {"reason": "user_preview", "expect": "TARGETING_MATCH"},
+  {"reason": "condition_match", "condition": {"filters": [{"type": "person", "key": "plan", "op": "eq", "value": "pro"}], "rollout_pct": 100}, "expect": "TARGETING_MATCH"},
+  {"reason": "condition_match", "condition": {"filters": [{"type": "person", "key": "plan", "op": "eq", "value": "pro"}], "rollout_pct": 20}, "expect": "TARGETING_MATCH"},
+  {"reason": "condition_match", "condition": {"rollout_pct": 20}, "expect": "SPLIT"},
+  {"reason": "condition_match", "condition": {"rollout_pct": 100}, "type": "multivariate", "expect": "SPLIT"},
+  {"reason": "condition_match", "condition": {"rollout_pct": 100, "variant_override": "a"}, "type": "multivariate", "expect": "STATIC"},
+  {"reason": "condition_match", "condition": {"rollout_pct": 100}, "expect": "STATIC"},
+  {"reason": "something_new", "expect": "UNKNOWN"},
+  {"reason": "no_bucketing_key", "error": "TARGETING_KEY_MISSING"},
+  {"reason": "requires_server", "error": "GENERAL"},
+  {"reason": "prerequisite_missing", "error": "GENERAL"},
+  {"reason": "prerequisite_cycle", "error": "GENERAL"}
+ ]
+}

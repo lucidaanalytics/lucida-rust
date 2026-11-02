@@ -1,0 +1,1337 @@
+{
+ "format": "lucida-flag-vectors/1",
+ "description": "List and network operators (N-EXP-4, N-EXP-5): array_contains_any/all/none on list-valued properties and ip_in_cidr / ip_not_in_cidr on IPv4 and IPv6 addresses. Expected values come from an independent Python script (ipaddress) over testdata/flags/README.md; every rollout is 100, so nothing depends on the hash.",
+ "hash_vectors": [],
+ "flags": [
+  {
+   "key": "l0_array_contains_any",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "array_contains_any",
+       "value": [
+        "a",
+        "b"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l1_array_contains_all",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "array_contains_all",
+       "value": [
+        "a",
+        "b"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l2_array_contains_none",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "array_contains_none",
+       "value": [
+        "a",
+        "b"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l3_array_contains_any",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "array_contains_any",
+       "value": [
+        1,
+        2
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l4_array_contains_all",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "array_contains_all",
+       "value": []
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l5_array_contains_none",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "array_contains_none",
+       "value": []
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l6_array_contains_any",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "array_contains_any",
+       "value": "a"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l7_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": [
+        "10.0.0.0/8",
+        "192.168.1.0/24",
+        "2001:db8::/32"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l8_ip_not_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_not_in_cidr",
+       "value": [
+        "10.0.0.0/8",
+        "192.168.1.0/24",
+        "2001:db8::/32"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l9_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": "203.0.113.7"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l10_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": "10.1.2.3/8"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l11_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": "2001:db8::5"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l12_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": [
+        "bogus",
+        "300.1.1.1/8",
+        "172.16.0.0/12"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l13_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": [
+        "bogus"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l14_ip_not_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_not_in_cidr",
+       "value": [
+        "bogus"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l15_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": [
+        "0.0.0.0/0"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "l16_ip_in_cidr",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "person",
+       "key": "p",
+       "op": "ip_in_cidr",
+       "value": [
+        "::/0"
+       ]
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  }
+ ],
+ "vectors": [
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on [\"b\", \"c\"]",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "b",
+      "c"
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on [\"c\"]",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "c"
+     ]
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on []",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": []
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on \"a\"",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "a"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on missing",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on null",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": null
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on [1, \"a\"]",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      1,
+      "a"
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_any [\"a\", \"b\"] on [\"A\"]",
+   "flag": "l0_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "A"
+     ]
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_all [\"a\", \"b\"] on [\"a\", \"b\", \"c\"]",
+   "flag": "l1_array_contains_all",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "a",
+      "b",
+      "c"
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_all [\"a\", \"b\"] on [\"b\", \"a\"]",
+   "flag": "l1_array_contains_all",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "b",
+      "a"
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_all [\"a\", \"b\"] on [\"a\"]",
+   "flag": "l1_array_contains_all",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "a"
+     ]
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_all [\"a\", \"b\"] on []",
+   "flag": "l1_array_contains_all",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": []
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_all [\"a\", \"b\"] on \"ab\"",
+   "flag": "l1_array_contains_all",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "ab"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_all [\"a\", \"b\"] on missing",
+   "flag": "l1_array_contains_all",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_none [\"a\", \"b\"] on [\"c\"]",
+   "flag": "l2_array_contains_none",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "c"
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_none [\"a\", \"b\"] on [\"a\", \"c\"]",
+   "flag": "l2_array_contains_none",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "a",
+      "c"
+     ]
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_none [\"a\", \"b\"] on []",
+   "flag": "l2_array_contains_none",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": []
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_none [\"a\", \"b\"] on \"c\"",
+   "flag": "l2_array_contains_none",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "c"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_none [\"a\", \"b\"] on missing",
+   "flag": "l2_array_contains_none",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_any [1, 2] on [2.0]",
+   "flag": "l3_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      2.0
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_any [1, 2] on [\"1\"]",
+   "flag": "l3_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "1"
+     ]
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "array_contains_any [1, 2] on [3, 1]",
+   "flag": "l3_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      3,
+      1
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_all [] on [\"x\"]",
+   "flag": "l4_array_contains_all",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "x"
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_all [] on []",
+   "flag": "l4_array_contains_all",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": []
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_none [] on [\"x\"]",
+   "flag": "l5_array_contains_none",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "x"
+     ]
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "array_contains_any \"a\" on [\"a\"]",
+   "flag": "l6_array_contains_any",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": [
+      "a"
+     ]
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"10.1.2.3\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "10.1.2.3"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"11.0.0.1\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "11.0.0.1"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"192.168.1.255\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "192.168.1.255"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"192.168.2.1\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "192.168.2.1"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"2001:db8::1\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "2001:db8::1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"2001:db9::1\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "2001:db9::1"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"::ffff:10.0.0.1\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "::ffff:10.0.0.1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"not-an-ip\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "not-an-ip"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on missing",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on 12345",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": 12345
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"fe80::1%eth0\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "fe80::1%eth0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \" 10.0.0.9 \"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": " 10.0.0.9 "
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"010.1.2.3\"",
+   "flag": "l7_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "010.1.2.3"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_not_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"11.0.0.1\"",
+   "flag": "l8_ip_not_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "11.0.0.1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_not_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"10.1.2.3\"",
+   "flag": "l8_ip_not_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "10.1.2.3"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_not_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"garbage\"",
+   "flag": "l8_ip_not_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "garbage"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_not_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on missing",
+   "flag": "l8_ip_not_in_cidr",
+   "context": {
+    "distinct_id": "u1"
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_not_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"2001:db9::1\"",
+   "flag": "l8_ip_not_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "2001:db9::1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_not_in_cidr [\"10.0.0.0/8\", \"192.168.1.0/24\", \"2001:db8::/32\"] on \"::1\"",
+   "flag": "l8_ip_not_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "::1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr \"203.0.113.7\" on \"203.0.113.7\"",
+   "flag": "l9_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "203.0.113.7"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr \"203.0.113.7\" on \"203.0.113.8\"",
+   "flag": "l9_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "203.0.113.8"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr \"203.0.113.7\" on \"::ffff:203.0.113.7\"",
+   "flag": "l9_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "::ffff:203.0.113.7"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr \"10.1.2.3/8\" on \"10.200.0.1\"",
+   "flag": "l10_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "10.200.0.1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr \"10.1.2.3/8\" on \"11.0.0.0\"",
+   "flag": "l10_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "11.0.0.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr \"2001:db8::5\" on \"2001:0db8:0000::5\"",
+   "flag": "l11_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "2001:0db8:0000::5"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr \"2001:db8::5\" on \"2001:db8::6\"",
+   "flag": "l11_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "2001:db8::6"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"bogus\", \"300.1.1.1/8\", \"172.16.0.0/12\"] on \"172.31.255.255\"",
+   "flag": "l12_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "172.31.255.255"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"bogus\", \"300.1.1.1/8\", \"172.16.0.0/12\"] on \"172.32.0.0\"",
+   "flag": "l12_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "172.32.0.0"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"bogus\"] on \"1.2.3.4\"",
+   "flag": "l13_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "1.2.3.4"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_not_in_cidr [\"bogus\"] on \"1.2.3.4\"",
+   "flag": "l14_ip_not_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "1.2.3.4"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"0.0.0.0/0\"] on \"8.8.8.8\"",
+   "flag": "l15_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "8.8.8.8"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"0.0.0.0/0\"] on \"2001:db8::1\"",
+   "flag": "l15_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "2001:db8::1"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"::/0\"] on \"2001:db8::1\"",
+   "flag": "l16_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "2001:db8::1"
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "ip_in_cidr [\"::/0\"] on \"8.8.8.8\"",
+   "flag": "l16_ip_in_cidr",
+   "context": {
+    "distinct_id": "u1",
+    "person_properties": {
+     "p": "8.8.8.8"
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  }
+ ]
+}

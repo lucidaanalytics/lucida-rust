@@ -173,3 +173,65 @@ query compiler (`crates/lc-query` `Op`), so a filter means the same thing in a f
 
 Expected values were derived from this text with an independent Python script (hashlib for the three
 hash-dependent vectors, pinned in `hash_vectors`), then checked against the Go evaluator.
+
+### Runtime events and merge-patch rule values (`vectors_runtime.json`, P-H6, P-L10)
+
+New fields: `Filter.scope`, `Condition.payload_patch`, `Context.runtime_events`, `Result.runtime`.
+
+- **Event filters.** `{type: "event", key: "<event name>", op, value, scope: "session" | "page"}` (scope
+  defaults to `session`) count the event in the current session or page view:
+  `n = runtime_events[scope][key]` (missing = 0). `is_set` is `n > 0`, `is_not_set` is `n == 0`; `eq neq gt gte
+  lt lte between not_between` compare `n` with the numeric `value` like any numeric property.
+  `runtime_events = {"session": {"<event>": n}, "page": {"<event>": n}}`. Session counts reset when the session id
+  changes; page counts reset on each `$pageview` (which then counts as 1 on the new page).
+- **Partial evaluation.** When `runtime_events` is absent (a server cannot see the browser's events), event
+  filters are pending. A condition whose other filters pass and that would decide (sticky value, rollout match,
+  or with `early_exit` a final `out_of_rollout`) is recorded as a branch `{filters: <its event filters in
+  order>, result: <that Result>}` and evaluation continues with the next condition as if the event filters had
+  failed. A rollout miss without `early_exit` decides nothing, so it adds no branch. The returned Result is the
+  fallback with `runtime: [branches...]` (omitted when empty). `requires_server` keeps the branches found so far.
+- **Resolving.** The client takes the first branch whose event filters all pass on its counts, else the fallback
+  without `runtime`. This equals a full evaluation with the same counts, which is what vectors with
+  `runtime_events` (even `{}`) check. A branch result may itself carry branches; resolving recurses into it.
+  Prerequisites and `flag` filters read the dependency's unresolved result, plus the branches of "Dependent
+  flags" below (`vectors_runtime_deps.json`).
+- **Merge patch.** `condition.payload_patch` is an RFC 7386 JSON merge patch applied to the payload the condition
+  serves (variant payload, json flag payload, or none = `{}`), including sticky results: object members merge
+  recursively, `null` deletes a member, any non-object value replaces. The flag's stored payloads never change.
+
+Every rollout in the file is 0 or 100 and every variant comes from `variant_override`, so no expected value
+depends on the hash; expected values were derived by hand from this text.
+
+### Event property filters and dependent flags (`vectors_runtime_deps.json`)
+
+- **Event property filters.** An event filter may carry `properties: [{type: "event_property", key, op, value}]`:
+  only events whose own properties satisfy every predicate (person-property operator semantics) count. Such a
+  filter reads the count named `CountKey`: the event name when there are no predicates, else
+  `<event>|<JSON of [[key, op, value], ...]>` (compact JSON, `value` null when absent, no HTML escaping), e.g.
+  `purchase|[["plan","eq","pro"]]`. A client counts an event once under its name and once under each distinct
+  CountKey of the property-filtered event filters it knows (local definitions and server branches) that the
+  event satisfies; the same session / page resets apply.
+- **Dependent flags.** On a server (no `runtime_events`), a flag F whose prerequisite or `flag` filter reads a flag
+  D that still has `runtime` branches is also evaluated for every other value D's branches can resolve to (the
+  results of D's branches, nested ones included, in order; values equal to D's fallback value are skipped). Each
+  such evaluation that differs from F's fallback result becomes a branch
+  `{filters: [{type: "flag", key: D, op: "eq", value: <D's value>}], result: <F under that value>}`, placed
+  before F's own event branches. Several branched dependencies nest (first dependency outermost, at most 4).
+- **Resolving a response.** The client resolves flags dependencies first: a `flag` branch filter passes when
+  the referenced flag's resolved value matches; resolving one result alone never passes a `flag` filter. The
+  resolved response equals a full evaluation with the same counts (checked by the Go and TS tests).
+  shortcut: a dependency whose fallback is `requires_server` and that resolves to a branch with the value
+  `false` keeps the dependent's `requires_server` fallback.
+
+### List and network operators (`vectors_list.json`)
+
+On a set property (missing/null still matches only `is_not_set`):
+
+- `array_contains_any` / `array_contains_all` / `array_contains_none`: the property is a list, `value` a list;
+  membership by `eq`. Any = at least one value is in the property; all = every value is (an empty `value` is
+  true); none = no value is. A non-list property or value is false for all three.
+- `ip_in_cidr` / `ip_not_in_cidr`: the property is an IPv4 or IPv6 address string (trimmed; IPv4-mapped IPv6
+  reads as IPv4; zoned addresses and IPv4 octets with leading zeros are invalid). `value` is a CIDR block
+  (`10.0.0.0/8`, `2001:db8::/32`; host bits ignored), a bare address (one host) or a list of them; invalid entries
+  are skipped. An IPv4 block never contains an IPv6 address and vice versa. An invalid address or no valid block
+  is false for both. Gateways set person property `$ip` to the request IP for public keys.

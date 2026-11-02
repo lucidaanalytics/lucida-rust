@@ -15,6 +15,7 @@ use crate::core::{
     remote_config_payload, remote_config_url, retry_delay, retryable, wire,
 };
 use crate::defcache::{adopt_cached, publish_cached, shutdown_cached};
+use crate::details::{FALLBACK_REASON, FlagDetails, fallback};
 use crate::eval::FlagValue;
 use crate::hooks::build_wire;
 use crate::identity::Shared;
@@ -513,6 +514,11 @@ impl AsyncClient {
     }
 
     async fn resolve(&self, key: &str, id: &str, o: &FlagOptions) -> Option<Resolved> {
+        let r = self.resolve_live(key, id, o).await;
+        r.or_else(|| fallback(&self.inner.opts.fallbacks, key))
+    }
+
+    async fn resolve_live(&self, key: &str, id: &str, o: &FlagOptions) -> Option<Resolved> {
         if let Some(r) = self.inner.flags.local_one(key, id, o) {
             return Some(r);
         }
@@ -533,16 +539,30 @@ impl AsyncClient {
         distinct_id: &str,
         o: &FlagOptions,
     ) -> Option<FlagValue> {
+        self.get_feature_flag_details(key, distinct_id, o).await
+            .map(|d| d.value)
+    }
+
+    /// [`Self::get_feature_flag`] with the full [`FlagDetails`]; an [`Options::fallbacks`] value has reason `fallback`.
+    pub async fn get_feature_flag_details(
+        &self,
+        key: &str,
+        distinct_id: &str,
+        o: &FlagOptions,
+    ) -> Option<FlagDetails> {
         if self.inner.opts.disabled {
             return None;
         }
         let r = self.resolve(key, distinct_id, o).await?;
-        if !o.no_exposure && self.inner.flags.first_seen(distinct_id, key, &r.value) {
+        if !o.no_exposure
+            && r.reason != FALLBACK_REASON
+            && self.inner.flags.first_seen(distinct_id, key, &r.value)
+        {
             for e in exposure_events(distinct_id, key, &r) {
                 self.capture(&e);
             }
         }
-        Some(r.value)
+        Some(FlagDetails::new(key, r))
     }
 
     pub async fn is_feature_enabled(
