@@ -539,7 +539,8 @@ impl AsyncClient {
         distinct_id: &str,
         o: &FlagOptions,
     ) -> Option<FlagValue> {
-        self.get_feature_flag_details(key, distinct_id, o).await
+        self.get_feature_flag_details(key, distinct_id, o)
+            .await
             .map(|d| d.value)
     }
 

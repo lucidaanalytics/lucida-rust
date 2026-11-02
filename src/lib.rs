@@ -29,8 +29,8 @@ pub use context::{
 #[cfg(feature = "tokio")]
 pub use context::{bind_context_async, with_context_async};
 pub use core::{Error, Event, FlagOptions, Options, Props, VERSION, iso};
-pub use details::{FALLBACK_REASON, FlagDetails};
 pub use defcache::{FlagDefinitionCache, InMemoryFlagDefinitionCache};
+pub use details::{FALLBACK_REASON, FlagDetails};
 pub use eval::{FlagResult, FlagValue, REQUIRES_SERVER, evaluate_all, hash01};
 #[cfg(feature = "blocking")]
 pub use global::{global, init_global};

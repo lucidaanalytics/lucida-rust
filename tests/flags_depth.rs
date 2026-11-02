@@ -161,12 +161,17 @@ fn fallbacks_serve_without_exposure_and_details_carry_the_reason() {
             .insert("ghost".into(), lucida::FlagValue::Variant("safe".into()));
     });
     let o = FlagOptions::default();
-    let d = c.get_feature_flag_details("ghost", "u", &o).expect("fallback");
+    let d = c
+        .get_feature_flag_details("ghost", "u", &o)
+        .expect("fallback");
     assert_eq!(d.value, lucida::FlagValue::Variant("safe".into()));
     assert_eq!(d.reason, "fallback");
     let a = c.get_feature_flag_details("a", "u", &o).expect("a");
     assert_eq!(a.value, lucida::FlagValue::Bool(true));
-    assert_eq!((a.reason.as_str(), a.condition_index), ("condition_match", 0));
+    assert_eq!(
+        (a.reason.as_str(), a.condition_index),
+        ("condition_match", 0)
+    );
     assert!(c.get_feature_flag_details("nope", "u", &o).is_none());
     let seen = seen.lock().expect("lock");
     assert!(!seen.is_empty() && seen.iter().all(|e| e["properties"]["$feature_flag"] == "a"));
