@@ -1,8 +1,7 @@
 //! Async client on tokio + async `reqwest` (feature `tokio`). Same behaviour as the blocking client.
 
 use std::collections::HashMap;
-use std::sync::atomic::Ordering;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, atomic::Ordering};
 use std::time::{Duration, Instant};
 
 use serde_json::Value;
