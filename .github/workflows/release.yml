@@ -17,6 +17,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
         with:
           toolchain: "1.99.0"
+      # A crate that depends on lucida-analytics keeps path = "../rust" for development (cargo package drops it):
+      # the base SDK's public source must sit beside the checkout, as in ci.yml.
+      - run: if grep -q 'path = "../rust"' Cargo.toml; then git clone --depth 1 https://github.com/lucidaanalytics/lucida-rust "$GITHUB_WORKSPACE/../rust"; fi
       - run: cargo package --locked
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
