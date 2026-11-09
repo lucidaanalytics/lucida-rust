@@ -232,6 +232,255 @@
      "value": false
     }
    ]
+  },
+  {
+   "key": "wide_1",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "w1",
+       "op": "is_set",
+       "scope": "session"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "wide_2",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "w2",
+       "op": "is_set",
+       "scope": "session"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "wide_3",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "w3",
+       "op": "is_set",
+       "scope": "session"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "wide_4",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "w4",
+       "op": "is_set",
+       "scope": "session"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "wide_5",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "w5",
+       "op": "is_set",
+       "scope": "session"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "wide_6",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "event",
+       "key": "w6",
+       "op": "is_set",
+       "scope": "session"
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
+  },
+  {
+   "key": "wide_all",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "rollout_pct": 100
+    }
+   ],
+   "prerequisites": [
+    {
+     "flag": "wide_1",
+     "value": true
+    },
+    {
+     "flag": "wide_2",
+     "value": true
+    },
+    {
+     "flag": "wide_3",
+     "value": true
+    },
+    {
+     "flag": "wide_4",
+     "value": true
+    },
+    {
+     "flag": "wide_5",
+     "value": true
+    },
+    {
+     "flag": "wide_6",
+     "value": true
+    }
+   ]
+  },
+  {
+   "key": "wide_any",
+   "type": "boolean",
+   "active": true,
+   "salt": "s",
+   "aggregation": {
+    "kind": "person"
+   },
+   "conditions": [
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "wide_1",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    },
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "wide_2",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    },
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "wide_3",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    },
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "wide_4",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    },
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "wide_5",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    },
+    {
+     "filters": [
+      {
+       "type": "flag",
+       "key": "wide_6",
+       "op": "eq",
+       "value": true
+      }
+     ],
+     "rollout_pct": 100
+    }
+   ]
   }
  ],
  "vectors": [
@@ -876,6 +1125,81 @@
      "page": {
       "cta": 1
      }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "no_condition_match",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "six branched prerequisites all met: wide_all",
+   "flag": "wide_all",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "w1": 1,
+      "w2": 1,
+      "w3": 1,
+      "w4": 1,
+      "w5": 1,
+      "w6": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 0
+   }
+  },
+  {
+   "name": "six branched prerequisites, last unmet: wide_all",
+   "flag": "wide_all",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "w1": 1,
+      "w2": 1,
+      "w3": 1,
+      "w4": 1,
+      "w5": 1
+     }
+    }
+   },
+   "expected": {
+    "value": false,
+    "reason": "prerequisite_failed",
+    "condition_index": -1
+   }
+  },
+  {
+   "name": "sixth of six branched filters matches: wide_any",
+   "flag": "wide_any",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {
+      "w6": 1
+     }
+    }
+   },
+   "expected": {
+    "value": true,
+    "reason": "condition_match",
+    "condition_index": 5
+   }
+  },
+  {
+   "name": "none of six branched filters match: wide_any",
+   "flag": "wide_any",
+   "context": {
+    "distinct_id": "u1",
+    "runtime_events": {
+     "session": {}
     }
    },
    "expected": {

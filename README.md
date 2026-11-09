@@ -3,6 +3,17 @@
 Server SDK for Lucida: batched capture, local feature-flag evaluation and historical import. Name a distinct id per
 event, or run inside `with_context` and use `Event::in_context`.
 
+## Install
+
+**Source install until the registry release** (the package is not on its registry yet):
+
+```sh
+cargo add lucida-analytics --git https://github.com/lucidaanalytics/lucida-rust
+```
+
+The library is imported as `lucida`.
+
+
 ```rust
 use lucida::{Client, Event, FlagOptions, Options};
 

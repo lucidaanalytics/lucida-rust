@@ -67,7 +67,7 @@ pub struct Options {
 impl Default for Options {
     fn default() -> Self {
         Self {
-            host: "https://app.lucida.dev".into(),
+            host: "https://capture.lucidace.com".into(),
             flush_at: 20,
             flush_interval: Duration::from_secs(5),
             max_queue_size: 1000,
