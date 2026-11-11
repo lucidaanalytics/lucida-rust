@@ -59,8 +59,11 @@ fn person_properties_and_identify_group_dedupe() {
     );
 }
 
+/// Requests the stub saw, as `(path, body)`.
+type Seen = Arc<Mutex<Vec<(String, Value)>>>;
+
 /// One-thread HTTP stub: answers the n-th request with `statuses[n]` (200 after that) and records `(path, body)`.
-fn stub(statuses: Vec<u16>) -> (String, Arc<Mutex<Vec<(String, Value)>>>) {
+fn stub(statuses: Vec<u16>) -> (String, Seen) {
     let listener = TcpListener::bind("127.0.0.1:0").expect("bind");
     let host = format!("http://{}", listener.local_addr().expect("addr"));
     let seen = Arc::new(Mutex::new(Vec::new()));
