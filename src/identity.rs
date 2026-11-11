@@ -1,11 +1,12 @@
 //! Per-client shared state: super properties, the bounded identify/group dedupe set, and the test-mode sink.
 
+use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
-use crate::core::{Event, Lru, Props, lock};
+use crate::core::{Event, Lru, Props, lock, uuid7};
 
 const IDENTITY_DEDUPE_SIZE: usize = 1000;
 
@@ -13,6 +14,8 @@ const IDENTITY_DEDUPE_SIZE: usize = 1000;
 pub(crate) struct Shared {
     super_props: Mutex<Props>,
     seen: Mutex<Lru>,
+    /// Event uuid to dedupe key, until the event is dropped.
+    keys: Mutex<HashMap<String, String>>,
 }
 
 impl Shared {
@@ -20,6 +23,7 @@ impl Shared {
         Self {
             super_props: Mutex::new(defaults),
             seen: Mutex::default(),
+            keys: Mutex::default(),
         }
     }
 
@@ -35,18 +39,47 @@ impl Shared {
         lock(&self.super_props).clone()
     }
 
-    pub fn first_identify(&self, id: &str, set: &Props, set_once: &Props) -> bool {
+    /// The uuid to send an identify under, or `None` when this exact call was already sent.
+    pub fn first_identify(&self, id: &str, set: &Props, set_once: &Props) -> Option<String> {
         self.first(&json!(["identify", id, set, set_once]))
     }
 
-    pub fn first_group(&self, kind: &str, key: &str, id: Option<&str>, props: &Props) -> bool {
+    pub fn first_group(
+        &self,
+        kind: &str,
+        key: &str,
+        id: Option<&str>,
+        props: &Props,
+    ) -> Option<String> {
         self.first(&json!(["group", kind, key, id, props]))
     }
 
-    /// True the first time this exact call (kind, id and properties) is seen by the client.
-    fn first(&self, call: &Value) -> bool {
+    /// The uuid to send the event under the first time this exact call (kind, id and properties) is
+    /// seen by the client, else `None`. [`Shared::release`] frees it again when the event is dropped.
+    fn first(&self, call: &Value) -> Option<String> {
         let key = format!("{:x}", Sha256::digest(call.to_string().as_bytes()));
-        lock(&self.seen).insert(key, IDENTITY_DEDUPE_SIZE)
+        if !lock(&self.seen).insert(key.clone(), IDENTITY_DEDUPE_SIZE) {
+            return None;
+        }
+        let uuid = uuid7();
+        let mut keys = lock(&self.keys);
+        if keys.len() >= IDENTITY_DEDUPE_SIZE
+            && let Some(old) = keys.keys().next().cloned()
+        {
+            keys.remove(&old);
+        }
+        keys.insert(uuid.clone(), key);
+        Some(uuid)
+    }
+
+    /// Forget the calls whose events were in a dropped batch, so repeating them is sent again.
+    pub fn release(&self, events: &[Value]) {
+        let mut keys = lock(&self.keys);
+        for e in events {
+            if let Some(key) = e["uuid"].as_str().and_then(|u| keys.remove(u)) {
+                lock(&self.seen).remove(&key);
+            }
+        }
     }
 }
 

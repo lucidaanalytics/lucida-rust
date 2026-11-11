@@ -152,10 +152,10 @@ impl Inner {
             if !retryable(status) || attempt >= self.opts.max_retries || lock(&self.q).abort {
                 lock(&self.q).dropped += n;
                 self.log(&format!("dropping {n} events (status {status})"));
-                self.opts.fail(
-                    &format!("dropped {n} events (status {status})"),
-                    &payload["batch"].as_array().cloned().unwrap_or_default(),
-                );
+                let events = payload["batch"].as_array().cloned().unwrap_or_default();
+                self.shared.release(&events);
+                self.opts
+                    .fail(&format!("dropped {n} events (status {status})"), &events);
                 return;
             }
             let delay = retry_delay(attempt, ra);
@@ -280,14 +280,15 @@ impl Client {
 
     /// `$identify`; an identical call (same id and properties) already sent by this client is skipped.
     pub fn identify(&self, distinct_id: &str, set: Props, set_once: Props) {
-        if !self
+        let Some(uuid) = self
             .inner
             .shared
             .first_identify(distinct_id, &set, &set_once)
-        {
+        else {
             return;
-        }
+        };
         self.capture(&Event {
+            uuid: Some(uuid),
             set,
             set_once,
             ..Event::new(distinct_id, "$identify")
@@ -310,19 +311,22 @@ impl Client {
         properties: Props,
         distinct_id: Option<&str>,
     ) {
-        if !self
-            .inner
-            .shared
-            .first_group(group_type, group_key, distinct_id, &properties)
-        {
+        let Some(uuid) =
+            self.inner
+                .shared
+                .first_group(group_type, group_key, distinct_id, &properties)
+        else {
             return;
-        }
+        };
         let id = distinct_id.map_or_else(|| format!("${group_type}_{group_key}"), str::to_owned);
         self.capture(
-            &Event::new(&id, "$groupidentify")
-                .property("$group_type", group_type)
-                .property("$group_key", group_key)
-                .property("$group_set", properties),
+            &Event {
+                uuid: Some(uuid),
+                ..Event::new(&id, "$groupidentify")
+            }
+            .property("$group_type", group_type)
+            .property("$group_key", group_key)
+            .property("$group_set", properties),
         );
     }
 
@@ -389,18 +393,40 @@ impl Client {
     }
 
     /// Historical import via `POST /v1/s2s/batch` (secret key, timestamps kept), chunks of 1000.
+    /// Super properties, `disable_geoip` and `before_send` apply (an event the hook drops is not sent);
+    /// [`import_events_raw`](Self::import_events_raw) sends the events as given.
     ///
     /// # Errors
     /// `NoSecretKey`, or `Status` at the first rejected chunk.
     pub fn import_events(&self, events: &[Event]) -> Result<usize, Error> {
+        self.import(events, false)
+    }
+
+    /// [`import_events`](Self::import_events) without super properties or `before_send`.
+    ///
+    /// # Errors
+    /// `NoSecretKey`, or `Status` at the first rejected chunk.
+    pub fn import_events_raw(&self, events: &[Event]) -> Result<usize, Error> {
+        self.import(events, true)
+    }
+
+    fn import(&self, events: &[Event], raw: bool) -> Result<usize, Error> {
         let i = &self.inner;
         let secret = i.opts.secret_key.as_ref().ok_or(Error::NoSecretKey)?;
         if i.opts.disabled {
             return Ok(0);
         }
+        let wires: Vec<Value> = if raw {
+            events.iter().map(wire).collect()
+        } else {
+            events
+                .iter()
+                .filter_map(|e| build_wire(&i.opts, &i.shared, e))
+                .collect()
+        };
         let mut sent = 0;
-        for chunk in events.chunks(MAX_BATCH) {
-            let payload = batch_payload(None, chunk.iter().map(wire).collect());
+        for chunk in wires.chunks(MAX_BATCH) {
+            let payload = batch_payload(None, chunk.to_vec());
             let (status, _, _) = i.request(
                 true,
                 &format!("{}/v1/s2s/batch", i.opts.host),

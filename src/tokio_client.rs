@@ -9,9 +9,9 @@ use tokio::sync::{Notify, watch};
 use tokio::task::JoinHandle;
 
 use crate::core::{
-    Error, Event, FlagOptions, FlagState, MAX_BATCH, Options, Props, QueueState, Resolved,
-    batch_payload, encode, exposure_events, lock, parse_remote, parse_retry_after, remote_body,
-    remote_config_payload, remote_config_url, retry_delay, retryable, wire,
+    Error, Event, FlagOptions, FlagState, Options, Props, QueueState, Resolved, batch_payload,
+    encode, exposure_events, lock, parse_remote, parse_retry_after, remote_body,
+    remote_config_payload, remote_config_url, retry_delay, retryable,
 };
 use crate::defcache::{adopt_cached, publish_cached, shutdown_cached};
 use crate::details::{FALLBACK_REASON, FlagDetails, fallback};
@@ -20,6 +20,8 @@ use crate::hooks::build_wire;
 use crate::identity::Shared;
 use crate::snapshot::FlagSnapshot;
 use crate::sse::SseEvents;
+
+mod import;
 
 struct Inner {
     api_key: String,
@@ -153,10 +155,10 @@ impl Inner {
             if !retryable(status) || attempt >= self.opts.max_retries || *stop.borrow() {
                 lock(&self.q).dropped += n;
                 self.log(&format!("dropping {n} events (status {status})"));
-                self.opts.fail(
-                    &format!("dropped {n} events (status {status})"),
-                    &payload["batch"].as_array().cloned().unwrap_or_default(),
-                );
+                let events = payload["batch"].as_array().cloned().unwrap_or_default();
+                self.shared.release(&events);
+                self.opts
+                    .fail(&format!("dropped {n} events (status {status})"), &events);
                 return;
             }
             let delay = retry_delay(attempt, ra);
@@ -378,14 +380,15 @@ impl AsyncClient {
 
     /// `$identify`; an identical call (same id and properties) already sent by this client is skipped.
     pub fn identify(&self, distinct_id: &str, set: Props, set_once: Props) {
-        if !self
+        let Some(uuid) = self
             .inner
             .shared
             .first_identify(distinct_id, &set, &set_once)
-        {
+        else {
             return;
-        }
+        };
         self.capture(&Event {
+            uuid: Some(uuid),
             set,
             set_once,
             ..Event::new(distinct_id, "$identify")
@@ -408,19 +411,22 @@ impl AsyncClient {
         properties: Props,
         distinct_id: Option<&str>,
     ) {
-        if !self
-            .inner
-            .shared
-            .first_group(group_type, group_key, distinct_id, &properties)
-        {
+        let Some(uuid) =
+            self.inner
+                .shared
+                .first_group(group_type, group_key, distinct_id, &properties)
+        else {
             return;
-        }
+        };
         let id = distinct_id.map_or_else(|| format!("${group_type}_{group_key}"), str::to_owned);
         self.capture(
-            &Event::new(&id, "$groupidentify")
-                .property("$group_type", group_type)
-                .property("$group_key", group_key)
-                .property("$group_set", properties),
+            &Event {
+                uuid: Some(uuid),
+                ..Event::new(&id, "$groupidentify")
+            }
+            .property("$group_type", group_type)
+            .property("$group_key", group_key)
+            .property("$group_set", properties),
         );
     }
 
@@ -481,35 +487,6 @@ impl AsyncClient {
     /// Without a secret key, or when the request or body is bad.
     pub async fn reload_feature_flags(&self) -> Result<(), Error> {
         self.inner.reload().await
-    }
-
-    /// Historical import via `POST /v1/s2s/batch` (secret key, timestamps kept), chunks of 1000.
-    ///
-    /// # Errors
-    /// `NoSecretKey`, or `Status` at the first rejected chunk.
-    pub async fn import_events(&self, events: &[Event]) -> Result<usize, Error> {
-        let i = &self.inner;
-        let secret = i.opts.secret_key.as_ref().ok_or(Error::NoSecretKey)?;
-        if i.opts.disabled {
-            return Ok(0);
-        }
-        let mut sent = 0;
-        for chunk in events.chunks(MAX_BATCH) {
-            let payload = batch_payload(None, chunk.iter().map(wire).collect());
-            let (status, _, _) = i
-                .request(
-                    &format!("{}/v1/s2s/batch", i.opts.host),
-                    &payload,
-                    Some(secret),
-                    None,
-                )
-                .await;
-            if !(200..300).contains(&status) {
-                return Err(Error::Status(status));
-            }
-            sent += chunk.len();
-        }
-        Ok(sent)
     }
 
     async fn resolve(&self, key: &str, id: &str, o: &FlagOptions) -> Option<Resolved> {

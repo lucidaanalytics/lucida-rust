@@ -418,6 +418,12 @@ impl Lru {
         }
         !had
     }
+
+    pub fn remove(&mut self, k: &str) {
+        if self.set.remove(k) {
+            self.order.retain(|x| x != k);
+        }
+    }
 }
 
 const SEEN_MAX: usize = 10_000;
